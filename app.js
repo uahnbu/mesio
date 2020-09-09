@@ -21,7 +21,7 @@ io.on('connect', socket => {
   socket.on('join', name => {
     if (room) {
       socket.emit('overdue');
-    } else if (name === 'super') {
+    } else if (name === 'supercalafragalisticexpialadocious') {
       host = id;
       io.to(host).emit('granted', players.size);
     } else if ([...players.values()].some(player => player.name === name)) {
