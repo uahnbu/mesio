@@ -1,0 +1,130 @@
+<html>
+<head>
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://i.pinimg.com/originals/35/13/38/3513382f64c47d3cf805a88ee6dc4169.jpg');
+  background-size: cover;
+  overflow: hidden;
+}
+body.question {
+  background: #111;
+}
+
+
+#init {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  user-select: none;
+  z-index: 1;
+}
+#init.waiting {
+  justify-content: center;
+}
+#init.question {
+  justify-content: flex-start;
+  top: 10%;
+  transform: translate(-50%);
+  width: 80%;
+}
+
+
+#init label {
+  color: #3a94ab;
+  font-family: 'Arial Black';
+  font-size: 1.5em;
+}
+#init.question label {
+  color: #f1c40f;
+  font-family: Arial;
+  text-align: center;
+}
+
+
+#init input {
+  padding-left: 5%;
+  padding-right: 5%;
+  height: 30%;
+  background: #fffa;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  box-shadow: 0 0 32px 0 #0006;
+  color: #3a94ab;
+  font-size: 1.5em;
+}
+#init.host input, #init.question input {
+  border-radius: 12px;
+  text-align: center;
+}
+#init.waiting input {
+  display: none;
+}
+
+
+#init button {
+  background: #f7ea54aa;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  box-shadow: 0 0 32px 0 #0006;
+  color: #3a94ab;
+  font-family: 'Arial Black';
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+#init #answer-container {
+  display: none;
+}
+#init #answer-container div {
+  display: block;
+  font-family: Arial;
+}
+#init.question #answer-container {
+  display: flex;
+  flex-direction: column;
+}
+#answer-container div:first-child {
+  color: lightpink;
+}
+#answer-container div:nth-child(2) {
+  color: lightyellow;
+}
+#answer-container div:nth-child(3) {
+  color: lightgreen;
+}
+#answer-container div:last-child {
+  color: lightcyan;
+}
+
+canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
+</head>
+<body>
+<div id=init>
+  <label>Your name:</label>
+  <input id=name>
+  <div id=answer-container><div></div><div></div><div></div><div></div></div>
+  <button>JOIN</button>
+</div>
+<script src="socket.io/socket.io.js"></script>
+<script src="static/game.js"></script>
+<script src="static/engine.js"></script>
+<script src="static/myengine.js"></script>
+</body>
+</html>
