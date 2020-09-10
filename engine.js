@@ -6,14 +6,14 @@ class Room {
     this.width = width;
     this.height = height;
     this.objects = {};
+    this.timing = false;
   }
   step() {
     const { width, height, objects } = this;
     Object.values(objects).forEach(clan => clan.forEach(obj => obj.step && obj.step(width, height, objects)));
-    setInterval(this.step.bind(this), 20);
   }
   startTime(seconds, callback) {
-    this.timeEnd = seconds * 1000 / 20;
+    this.timeEnd = seconds * 50;
     this.timer = 0;
     this.timerCallback = callback;
     this.timing = true;
@@ -121,4 +121,22 @@ class Wall {
   }
 }
 
-module.exports = { Room, Ball, Wall };
+class Goal {
+  constructor(size, totalW, totalH) {
+    const size2 = size >> 1;
+    this.size = size;
+    this.positions = [
+      [totalW / 4 - size2  , totalH / 4 - size2  ],
+      [totalW * 3/4 - size2, totalH / 4 - size2  ],
+      [totalW / 4 - size2  , totalH * 3/4 - size2],
+      [totalW * 3/4 - size2, totalH * 3/4 - size2]
+    ];
+  }
+  isInside(x, y, r, i) {
+    const [goalX, goalY] = this.positions[i - 1];
+    const size = this.size;
+    return x - r > goalX && x + r < goalX + size && y - r > goalY && y + r < goalY + size;
+  }
+}
+
+module.exports = { Room, Ball, Wall, Goal };

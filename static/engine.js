@@ -2,18 +2,30 @@ Math.ranInt = (min, max) => Math.round(Math.random() * (max - min + 1) + min);
 Math.RAD = Math.PI / 180;
 
 class Mouse {
-  constructor() {
+  constructor(obj, scale, anchorX, anchorY) {
     this.initX = this.initY = this.x = this.y = null;
-    document.onmousedown = document.ontouchstart = this.handleMouseDown.bind(this);
-    document.onmouseup = document.ontouchend = this.handleMouseUp.bind(this);
-    document.onmousemove = document.ontouchmove = this.handleMouseMove.bind(this);
+    this.scale = scale;
+    this.anchorX = anchorX; this.anchorY = anchorY;
+    obj.onmousedown = this.handleMouseDown.bind(this);
+    obj.onmouseup = obj.ontouchend = obj.ontouchcancel = this.handleMouseUp.bind(this);
+    obj.onmousemove = this.handleMouseMove.bind(this);
+    obj.ontouchstart = this.handleTouchStart.bind(this);
+    obj.ontouchmove = this.handleTouchMove.bind(this);
   }
   isDown() { return this.initX }
   dist() { return this.initX ? Math.sqrt((this.x - this.initX) ** 2 + (this.y - this.initY) ** 2) : null }
   angle() { return this.initX ? Math.atan2(this.y - this.initY, this.x - this.initX) : null }
-  handleMouseDown({offsetX, offsetY}) { this.initX = offsetX; this.initY = offsetY }
-  handleMouseUp() { this.initX = null; this.initY = null }
-  handleMouseMove({offsetX, offsetY}) { this.x = offsetX; this.y = offsetY }
+  handleMouseDown({offsetX, offsetY}) { this.initX = offsetX / this.scale; this.initY = offsetY / this.scale }
+  handleMouseUp() { this.initX = null; this.initY = null; this.x = null; this.y = null; }
+  handleMouseMove({offsetX, offsetY}) { this.x = offsetX / this.scale; this.y = offsetY / this.scale }
+  handleTouchStart({touches}) {
+    const { clientX, clientY } = touches[0];
+    this.initX = (clientX - this.anchorX) / this.scale; this.initY = (clientY - this.anchorY) / this.scale;
+  }
+  handleTouchMove({touches}) {
+    const { clientX, clientY } = touches[0];
+    this.x = (clientX - this.anchorX) / this.scale; this.y = (clientY - this.anchorY) / this.scale;
+  }
   draw(room) {
     const r = Math.min(64, this.dist());
     const ang = this.angle();
@@ -33,22 +45,24 @@ class Room {
     this.canvas = document.createElement('canvas');
     this.canvas.width = width;
     this.canvas.height = height;
-    this.scale(window.innerWidth, window.innerHeight);
+    this.scale = 1;
     document.body.appendChild(this.canvas);
+    this.fit(window.innerWidth, window.innerHeight);
     this.room = this.canvas.getContext('2d');
-    this.question = null;
     this.room.imageSmoothingEnabled = false;
+    this.question = null;
     this.objects = {};
   }
-  scale(containerW, containerH) {
+  fit(containerW, containerH) {
     const canvas = this.canvas;
     if (canvas.width / canvas.height > containerW / containerH) {
-      canvas.style.width = '100%';
-      canvas.style.height = 100 / canvas.height * canvas.width + 'vw';
+      canvas.style.width = '100vw';
+      canvas.style.height = 100 / canvas.width * canvas.height + 'vw';
     } else {
-      canvas.style.height = '100%';
-      canvas.style.width = 100 / canvas.width * canvas.height + 'vh';
+      canvas.style.height = '100vh';
+      canvas.style.width = 100 / canvas.height * canvas.width + 'vh';
     }
+    this.scale = canvas.offsetWidth / canvas.width;
   }
   draw() {
     const { width, height } = this.canvas;
@@ -56,14 +70,6 @@ class Room {
     room.fillStyle = '#222';
     room.beginPath();
     room.fillRect(0, 0, width, height);
-    room.fillStyle = 'mediumvioletred';
-    room.fillRect(width / 8, height / 8, width / 4, height / 4);
-    room.fillStyle = 'darkkhaki';
-    room.fillRect(width * 5/8, height / 8, width / 4, height / 4);
-    room.fillStyle = 'darkgreen';
-    room.fillRect(height / 8, height * 5/8, width / 4, height / 4);
-    room.fillStyle = 'midnightblue';
-    room.fillRect(width * 5/8, height * 5/8, width / 4, height / 4);
     Object.values(this.objects).forEach(clan => clan.forEach(obj => obj.draw(width, height, room)));
   }
   step() {
@@ -88,24 +94,25 @@ class Room {
 }
 
 class Ball {
-  constructor(x, y, r) {
-    this.x = x; this.y = y; this.r = r;
-    this.color = '#9c88ff';
+  constructor(x, y, r, ang, sprite) {
+    this.x = x; this.y = y; this.r = r; this.ang = ang;
+    this.sprite = sprite;
   }
   setPos(x, y) { this.x = x; this.y = y }
   draw(roomW, roomH, room) {
     const { x: mx, y: my, r } = this;
     [roomW - mx - r, mx - r, -1].forEach((x, i) => [roomH - my - r, my - r, -1].forEach((y, j) => {
       x < 0 && y < 0 && (
-        this.drawSingle(room, [mx - roomW, mx + roomW, mx][i], [my - roomH, my + roomH, my][j], r)
+        this.drawSingle(room, [mx - roomW, mx + roomW, mx][i], [my - roomH, my + roomH, my][j], r + 2)
       );
     }));
   }
   drawSingle(room, x, y, r) {
-    room.fillStyle = this.color;
-    room.beginPath();
-    room.arc(x, y, r, 0, Math.PI * 2);
-    room.fill();
+    room.translate(x, y);
+    room.rotate(this.ang + Math.PI / 2);
+    room.drawImage(this.sprite, -r, -r, r * 2, r * 2);
+    room.rotate(-this.ang - Math.PI / 2);
+    room.translate(-x, -y);
   }
 }
 
@@ -122,13 +129,13 @@ class Wall {
     this.x2 -= nX; this.y2 -= nY;
     this.type = 'wall';
   }
-  draw(roomW, roomH, room) {
+  draw(_roomW, _roomH, room) {
     const { x1, y1, x2, y2, r } = this;
     let nX = x2 - x1, nY = y2 - y1;
     const d = r / Math.sqrt(nX ** 2 + nY ** 2);
     const tX = -nY * d, tY = nX * d;
     nX *= d; nY *= d;
-    room.strokeStyle = '#2ecc71';
+    room.fillStyle = '#fff';
     room.beginPath();
     room.moveTo(x1 - tX, y1 - tY);
     room.arcTo(x1 - tX - nX, y1 - tY - nY, x1 - nX, y1 - nY, r);
@@ -137,6 +144,24 @@ class Wall {
     room.arcTo(x2 + tX + nX, y2 + tY + nY, x2 + nX, y2 + nY, r);
     room.arcTo(x2 - tX + nX, y2 - tY + nY, x2 - tX, y2 - tY, r);
     room.closePath();
-    room.stroke();
+    room.fill();
+  }
+}
+
+class Goal {
+  constructor(size, totalW, totalH) {
+    const size2 = size >> 1;
+    this.size = size;
+    this.positions = [
+      [totalW / 4 - size2  , totalH / 4 - size2  ],
+      [totalW * 3/4 - size2, totalH / 4 - size2  ],
+      [totalW / 4 - size2  , totalH * 3/4 - size2],
+      [totalW * 3/4 - size2, totalH * 3/4 - size2]
+    ];
+    this.colors = ['#ec407a', '#66bb6a', '#ffa726', '#7e57c2'];
+  }
+  draw(room) {
+    const { size, colors } = this;
+    this.positions.forEach((pos, i) => (room.fillStyle = colors[i], room.fillRect(...pos, size, size)));
   }
 }

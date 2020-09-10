@@ -3,11 +3,19 @@
   const label = init.querySelector('label');
   const input = init.querySelector('input');
   const button = init.querySelector('button');
+  const congrats = document.querySelector('#congrats');
   const answerDiva = [...document.querySelectorAll('#answer-container div')];
 
   let id;
   socket.on('connect', () => id = socket.id);
   
+  const sprites = { mouse: null, pig: null };
+  for (let sprite in sprites) {
+    const img = new Image();
+    img.src = './static/' + sprite + '.png';
+    sprites[sprite] = img;
+  }
+
   let room;
   let isHost = false;
   let isAsking = false;
@@ -43,8 +51,8 @@
     init.removeChild(button);
   });
   
-  socket.on('room', ({ width, height, players, question }) => {
-    room = new MyRoom(isHost, width, height, new Map(players), id, (...data) => socket.emit(...data));
+  socket.on('room', ({ width, height, walls, players, question }) => {
+    room = new MyRoom(isHost, width, height, walls, new Map(players), id, (...data) => socket.emit(...data), sprites);
     document.body.classList.add('question');
     init.classList.remove('waiting');
     init.classList.add('question');
@@ -59,11 +67,13 @@
   socket.on('question', question => {
     label.innerHTML = question.text;
     answerDiva.forEach((div, i) => div.innerHTML = question.answers[i]);
-    input.timer = 15;
-    input.value = '⌛ 15 - 🚩 ' + room.score;
-    room.timer = setInterval(() => {
-      --input.timer === 0 && clearInterval(room.timer);
-      input.value = '⌛ ' + input.timer + ' - 🚩 ' + room.score;
-    }, 1000);
   });
+
+  socket.on('time', time => input.value = '⌛ ' + time + ' - 🚩 ' + room.score);
+
+  socket.on('point', targetID => id === targetID && (
+    input.value = '⌛ 0 - 🚩 ' + ++room.score,
+    congrats.classList.add('show'),
+    setTimeout(() => congrats.classList.remove('show'), 1000)
+  ));
 }(io());

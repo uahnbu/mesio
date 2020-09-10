@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta name="viewport" content="width=device-width, user-scalable=no">
 <style>
 html, body {
   margin: 0;
@@ -8,9 +9,6 @@ html, body {
   background: url('https://i.pinimg.com/originals/35/13/38/3513382f64c47d3cf805a88ee6dc4169.jpg');
   background-size: cover;
   overflow: hidden;
-}
-body.question {
-  background: #111;
 }
 
 
@@ -36,6 +34,9 @@ body.question {
   transform: translate(-50%);
   width: 80%;
 }
+#init.question:not(.host) {
+  pointer-events: none;
+}
 
 
 #init label {
@@ -44,7 +45,7 @@ body.question {
   font-size: 1.5em;
 }
 #init.question label {
-  color: #f1c40f;
+  color: #ec407a;
   font-family: Arial;
   text-align: center;
 }
@@ -65,6 +66,10 @@ body.question {
 #init.host input, #init.question input {
   border-radius: 12px;
   text-align: center;
+}
+#init.question input {
+  width: auto;
+  height: auto;
 }
 #init.waiting input {
   display: none;
@@ -90,21 +95,39 @@ body.question {
   display: block;
   font-family: Arial;
 }
+#init.host #answer-container div {
+  font-size: 1.5em;
+}
 #init.question #answer-container {
   display: flex;
   flex-direction: column;
 }
 #answer-container div:first-child {
-  color: lightpink;
+  color: #ec407a;
 }
 #answer-container div:nth-child(2) {
-  color: lightyellow;
+  color: #66bb6a;
 }
 #answer-container div:nth-child(3) {
-  color: lightgreen;
+  color: #ffa726;
 }
 #answer-container div:last-child {
-  color: lightcyan;
+  color: #7e57c2;
+}
+
+
+#congrats {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 1s;
+  z-index: 1;
+  pointer-events: none;
+}
+#congrats.show {
+  opacity: 1;
 }
 
 canvas {
@@ -122,6 +145,7 @@ canvas {
   <div id=answer-container><div></div><div></div><div></div><div></div></div>
   <button>JOIN</button>
 </div>
+<img id=congrats src="static/congrats.png">
 <script src="socket.io/socket.io.js"></script>
 <script src="static/game.js"></script>
 <script src="static/engine.js"></script>
