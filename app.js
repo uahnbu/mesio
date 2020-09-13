@@ -39,7 +39,7 @@ io.on('connect', socket => {
     room = new MyRoom(width, height, players, walls, (...data) => io.emit(...data), questions);
     io.emit('room', {
       width, height, walls,
-      players: [...players.values()].map(({id, x, y}) => [id, {id, x, y}]),
+      players: [...players.values()].map(({id, name, x, y}) => [id, {id, name, x, y}]),
       question: { text: 'Are you ready?', answers: ['Yes', 'Yup', 'Yeah', 'So so'] }
     });
   });

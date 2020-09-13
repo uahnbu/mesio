@@ -24,6 +24,7 @@ class MyRoom extends Room {
       players[i].x = x;
       players[i].y = y;
       players[i].ball = ball;
+      players[i].score = 0;
     }
     this.objects['wall'] = [];
     walls.forEach(([x1, y1, x2, y2]) => {
@@ -56,16 +57,18 @@ class MyRoom extends Room {
     if (++this.myquestion < this.questions.length) {
       this.emit('question', this.questions[this.myquestion]);
       this.movable = true;
-      this.startTime(15, this.showAnswer);
-    }
+      this.startTime(10, this.showAnswer);
+    } else this.emit('ended');
   }
   showAnswer() {
     this.movable = false;
     const i = this.questions[this.myquestion].answer;
-    [...this.players.values()].forEach(player => {
+    const scores = [...this.players.values()].map(player => {
       const { x, y, r } = player.ball;
-      this.goal.isInside(x, y, r, i) && this.emit('point', player.id);
-    })
+      this.goal.isInside(x, y, r, i) && player.score++;
+      return { id: player.id, score: player.score };
+    });
+    this.emit('scores', scores);
   }
   emit(...data) { this.handleEmit(...data) }
 }

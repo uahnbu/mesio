@@ -45,7 +45,9 @@ html, body {
   font-size: 1.5em;
 }
 #init.question label {
-  color: #ec407a;
+  background: #f7ea5466;
+  border-radius: 12px;
+  color: #3a94ab;
   font-family: Arial;
   text-align: center;
 }
@@ -63,16 +65,9 @@ html, body {
   color: #3a94ab;
   font-size: 1.5em;
 }
-#init.host input, #init.question input {
+#init.host input, #init.question button {
   border-radius: 12px;
   text-align: center;
-}
-#init.question input {
-  width: auto;
-  height: auto;
-}
-#init.waiting input {
-  display: none;
 }
 
 
@@ -87,11 +82,23 @@ html, body {
   font-size: 1.5em;
   cursor: pointer;
 }
+#init.question button {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10%;
+  padding-right: 10%;
+  background: #fff6;
+}
+#init.waiting button {
+  display: none;
+}
 
 #init #answer-container {
   display: none;
 }
 #init #answer-container div {
+  margin-left: 10vw;
+  margin-right: 10vw;
   display: block;
   font-family: Arial;
 }
@@ -99,6 +106,10 @@ html, body {
   font-size: 1.5em;
 }
 #init.question #answer-container {
+  margin-left: auto;
+  margin-right: auto;
+  background: #fff6;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
 }
@@ -116,7 +127,7 @@ html, body {
 }
 
 
-#congrats {
+#talk {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -126,7 +137,13 @@ html, body {
   z-index: 1;
   pointer-events: none;
 }
-#congrats.show {
+#talk.congrats #congrats, #talk.tried #tried {
+  display: block;
+}
+#talk.congrats #tried, #talk.tried #congrats {
+  display: none;
+}
+#talk.show {
   opacity: 1;
 }
 
@@ -142,10 +159,13 @@ canvas {
 <div id=init>
   <label>Your name:</label>
   <input id=name>
-  <div id=answer-container><div></div><div></div><div></div><div></div></div>
   <button>JOIN</button>
+  <div id=answer-container><div></div><div></div><div></div><div></div></div>
 </div>
-<img id=congrats src="static/congrats.png">
+<div id=talk>
+  <img id=congrats src="static/congrats.png">
+  <img id=tried src="static/tried.png">
+</div>
 <script src="socket.io/socket.io.js"></script>
 <script src="static/game.js"></script>
 <script src="static/engine.js"></script>

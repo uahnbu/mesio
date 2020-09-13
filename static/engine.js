@@ -100,12 +100,12 @@ class Ball {
   }
   setPos(x, y) { this.x = x; this.y = y }
   draw(roomW, roomH, room) {
-    const { x: mx, y: my, r } = this;
-    [roomW - mx - r, mx - r, -1].forEach((x, i) => [roomH - my - r, my - r, -1].forEach((y, j) => {
-      x < 0 && y < 0 && (
-        this.drawSingle(room, [mx - roomW, mx + roomW, mx][i], [my - roomH, my + roomH, my][j], r + 2)
-      );
-    }));
+    const { x, y, r } = this;
+    const dxs = [roomW - x - r, -1, x - r];
+    const dys = [roomH - y - r, -1, y - r];
+    dxs.forEach((dx, i) => dys.forEach((dy, j) => (
+      dx < 0 && dy < 0 && this.drawSingle(room, x + (i - 1) * roomW, y + (i - 1) * roomH, r + 2)
+    )));
   }
   drawSingle(room, x, y, r) {
     room.translate(x, y);
@@ -129,8 +129,16 @@ class Wall {
     this.x2 -= nX; this.y2 -= nY;
     this.type = 'wall';
   }
-  draw(_roomW, _roomH, room) {
+  draw(roomW, roomH, room) {
     const { x1, y1, x2, y2, r } = this;
+    const dxs = [roomW - x1 - r, roomW - x2 - r, -1, x1 - r, x2 - r];
+    const dys = [roomH - y1 - r, roomH - y2 - r, -1, y1 - r, y2 - r];
+    const s = [-1, -1, 0, 1, 1];
+    dxs.forEach((dx, i) => dys.forEach((dy, j) => dx < 0 && dy < 0 && (
+      this.drawSingle(room, x1 + s[i] * roomW, y1 + s[j] * roomH, x2 + s[i] * roomW, y2 + s[j] * roomH, r + 2)
+    )));
+  }
+  drawSingle(room, x1, y1, x2, y2, r) {
     let nX = x2 - x1, nY = y2 - y1;
     const d = r / Math.sqrt(nX ** 2 + nY ** 2);
     const tX = -nY * d, tY = nX * d;
@@ -143,7 +151,6 @@ class Wall {
     room.lineTo(x2 + tX, y2 + tY);
     room.arcTo(x2 + tX + nX, y2 + tY + nY, x2 + nX, y2 + nY, r);
     room.arcTo(x2 - tX + nX, y2 - tY + nY, x2 - tX, y2 - tY, r);
-    room.closePath();
     room.fill();
   }
 }

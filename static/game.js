@@ -1,9 +1,11 @@
+let room;
+
 !function (socket) {
   const init = document.querySelector('#init');
   const label = init.querySelector('label');
   const input = init.querySelector('input');
   const button = init.querySelector('button');
-  const congrats = document.querySelector('#congrats');
+  const talk = document.querySelector('#talk');
   const answerDiva = [...document.querySelectorAll('#answer-container div')];
 
   let id;
@@ -16,19 +18,17 @@
     sprites[sprite] = img;
   }
 
-  let room;
   let isHost = false;
   let isAsking = false;
+  let gameOver = false;
 
   button.onclick = () => {
     if (isHost && !isAsking) {
       isAsking = true;
       socket.emit('start', [window.innerWidth, window.innerHeight]);
-    } else if (isAsking) {
-      socket.emit('next_question');
-    } else {
-      socket.emit('join', input.value);
-    }
+    } else if (isAsking) socket.emit('next_question');
+    else if (gameOver) room.downloadLeaderboard();
+    else socket.emit('join', input.value);
   };
 
   socket.on('granted', n => {
@@ -48,16 +48,17 @@
   socket.on('waiting', () => {
     init.classList.add('waiting');
     label.innerHTML = 'Please wait for host to start the game...';
-    init.removeChild(button);
+    button.innerHTML = input.value;
+    init.removeChild(input);
   });
   
   socket.on('room', ({ width, height, walls, players, question }) => {
-    room = new MyRoom(isHost, width, height, walls, new Map(players), id, (...data) => socket.emit(...data), sprites);
+    const playerMap = new Map(players);
+    room = new MyRoom(isHost, width, height, walls, playerMap, id, (...data) => socket.emit(...data), sprites);
     document.body.classList.add('question');
     init.classList.remove('waiting');
     init.classList.add('question');
     isHost && init.removeChild(input);
-    button.innerHTML = 'Next question';
     label.innerHTML = question.text;
     answerDiva.forEach((div, i) => div.innerHTML = question.answers[i]);
   });
@@ -69,11 +70,22 @@
     answerDiva.forEach((div, i) => div.innerHTML = question.answers[i]);
   });
 
-  socket.on('time', time => input.value = '⌛ ' + time + ' - 🚩 ' + room.score);
+  socket.on('time', time => button.innerHTML = '⌛ ' + time + (isHost ? '' : ' - 🚩 ' + room.score));
 
-  socket.on('point', targetID => id === targetID && (
-    input.value = '⌛ 0 - 🚩 ' + ++room.score,
-    congrats.classList.add('show'),
-    setTimeout(() => congrats.classList.remove('show'), 1000)
-  ));
+  socket.on('scores', players => {
+    !isHost && players.forEach(player => {
+      if (player.id !== id) return;
+      if (player.score !== room.score) {
+        room.score = player.score;
+        talk.classList.add('congrats', 'show');
+      } else {
+        talk.classList.add('tried', 'show');
+      }
+      button.innerHTML = '⌛ 0 - 🚩 ' + room.score;
+      setTimeout(() => talk.classList.remove('show'), 2000);
+    });
+    isHost && (button.innerHTML = 'Next question', room.updateLeaderboard(players));
+  });
+
+  socket.on('ended', () => isHost && (gameOver = true, button.innerHTML = 'Download leaderboard'));
 }(io());
