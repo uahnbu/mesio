@@ -2,13 +2,12 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-const path = require('path');
 const { MyRoom } = require('./myengine.js');
 const { questions, walls } = require('./json.js');
 
 app.set('port', process.env.PORT || 3000);
-app.use('/static', express.static(__dirname + '/static'));
-app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.use('/static', express.static('static'));
+app.get('/', (_req, res) => res.sendFile('index.html', { root: __dirname }));
 server.listen(app.get('port'), () => console.log(`Starting on port ${app.get('port')}.`));
 
 const players = new Map;

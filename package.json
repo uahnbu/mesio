@@ -1,5 +1,5 @@
 {
-  "name": "mmo",
+  "name": "mesio",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -13,5 +13,13 @@
     "start": "node app.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uahnbu29main/mesio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uahnbu29main/mesio/issues"
+  },
+  "homepage": "https://github.com/uahnbu29main/mesio#readme"
 }
