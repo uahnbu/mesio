@@ -49,7 +49,6 @@ class Room {
     document.body.appendChild(this.canvas);
     this.fit(window.innerWidth, window.innerHeight);
     this.room = this.canvas.getContext('2d');
-    this.room.imageSmoothingEnabled = false;
     this.question = null;
     this.objects = {};
   }
