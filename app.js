@@ -20,7 +20,7 @@ io.on('connect', socket => {
   socket.on('join', name => {
     if (room) {
       socket.emit('overdue');
-    } else if (name === 'super') {
+    } else if (name === 'supercalafragalisticexpialadocious') {
       host = id;
       io.to(host).emit('granted', players.size);
     } else if ([...players.values()].some(player => player.name === name)) {
@@ -39,7 +39,7 @@ io.on('connect', socket => {
     io.emit('room', {
       width, height, walls,
       players: [...players.values()].map(({id, name, x, y}) => [id, {id, name, x, y}]),
-      question: { text: 'Are you ready?', answers: ['Yes', 'Yup', 'Yeah', 'So so'] }
+      question: { text: 'Are you ready?', answers: ['A. Yes', 'B. Yup', 'C. Yeah', 'D. So so'] }
     });
   });
   

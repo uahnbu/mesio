@@ -82,7 +82,8 @@ let room;
         talk.classList.add('tried', 'show');
       }
       button.innerHTML = '⌛ 0 - 🚩 ' + room.score;
-      setTimeout(() => talk.classList.remove('congrats', 'tried', 'show'), 2000);
+      setTimeout(() => talk.classList.remove('show'), 2000);
+      setTimeout(() => talk.classList.remove('congrats', 'tried'), 3000);
     });
     isHost && (button.innerHTML = 'Next question', room.updateLeaderboard(players));
   });

@@ -13,26 +13,27 @@ class MyRoom extends Room {
   }
   clearTimer() { clearInterval(this.timer) }
   setup(players, walls) {
-    const { width: roomW, height: roomH } = this;
-    this.objects['ball'] = [];
-    const len = Math.ceil(players.length ** 0.5);
+    const { width, height, objects } = this;
+    objects['ball'] = [];
+    const len = Math.ceil(players.length ** 0.5 / 2);
+    const box = Math.ceil(players.length / 4);
     for (let i = 0; i < players.length; i++) {
-      const x = roomW / 2 + (i % len - len / 2) * 16 * 2;
-      const y = roomH / 2 + ((i / len | 0) - len / 2) * 16 * 2;
+      const x = (1/2 + (i / box | 0) % 2) * width / 2 + (i % box % len - len / 2) * 16 * 2;
+      const y = (1/2 + (i / box / 2 | 0)) * height / 2 + ((i % box / len | 0) - len / 2) * 16 * 2;
       const ball = new MyBall(x, y, 16, 1, 'dynamic');
-      this.objects['ball'].push(ball);
+      objects['ball'].push(ball);
       players[i].x = x;
       players[i].y = y;
       players[i].ball = ball;
       players[i].score = 0;
     }
-    this.objects['wall'] = [];
+    objects['wall'] = [];
     walls.forEach(([x1, y1, x2, y2]) => {
-      x1 *= roomW; y1 *= roomH; x2 *= roomW; y2 *= roomH;
+      x1 *= width; y1 *= height; x2 *= width; y2 *= height;
       const wall = new Wall(x1, y1, x2, y2, 8);
-      this.objects['wall'].push(wall);
+      objects['wall'].push(wall);
     });
-    this.goal = new Goal(Math.min(roomW, roomH) / 3, roomW, roomH);
+    this.goal = new Goal(Math.min(width, height) / 3, width, height);
   }
   step() {
     if (!this.movable) return;
