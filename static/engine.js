@@ -47,6 +47,7 @@ class Room {
     this.canvas.height = height;
     this.scale = 1;
     document.body.appendChild(this.canvas);
+    document.body.requestFullscreen();
     this.fit(window.innerWidth, window.innerHeight);
     this.room = this.canvas.getContext('2d');
     this.question = null;
