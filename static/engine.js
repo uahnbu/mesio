@@ -41,12 +41,12 @@ class Mouse {
 }
 
 class Room {
-  constructor(width, height) {
+  constructor(container, width, height) {
     this.canvas = document.createElement('canvas');
     this.canvas.width = width;
     this.canvas.height = height;
     this.scale = 1;
-    document.body.appendChild(this.canvas);
+    container.appendChild(this.canvas);
     this.requestFullscreen();
     this.fit(window.innerWidth, window.innerHeight);
     this.room = this.canvas.getContext('2d');

@@ -11,8 +11,8 @@ class MyMouse extends Mouse {
 }
 
 class MyRoom extends Room {
-  constructor(host, width, height, walls, players, id, handleEmit, sprites) {
-    super(width, height);
+  constructor(host, container, width, height, walls, players, id, handleEmit, sprites) {
+    super(container, width, height);
     const { offsetLeft, offsetTop, offsetWidth, offsetHeight } = this.canvas;
     !host && (this.mouse = new MyMouse(this.canvas, this.scale, offsetLeft - offsetWidth / 2, offsetTop - offsetHeight / 2));
     this.players = players;

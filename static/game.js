@@ -1,6 +1,7 @@
 let room;
 
 !function (socket) {
+  const container = document.querySelector('#container');
   const init = document.querySelector('#init');
   const label = init.querySelector('label');
   const input = init.querySelector('input');
@@ -54,7 +55,7 @@ let room;
   
   socket.on('room', ({ width, height, walls, players, question }) => {
     const playerMap = new Map(players);
-    room = new MyRoom(isHost, width, height, walls, playerMap, id, (...data) => socket.emit(...data), sprites);
+    room = new MyRoom(isHost, container, width, height, walls, playerMap, id, (...data) => socket.emit(...data), sprites);
     document.body.classList.add('question');
     init.classList.remove('waiting');
     init.classList.add('question');
