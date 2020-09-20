@@ -47,11 +47,17 @@ class Room {
     this.canvas.height = height;
     this.scale = 1;
     document.body.appendChild(this.canvas);
-    document.body.requestFullscreen();
+    this.requestFullscreen();
     this.fit(window.innerWidth, window.innerHeight);
     this.room = this.canvas.getContext('2d');
     this.question = null;
     this.objects = {};
+  }
+  requestFullscreen() {
+    const e = document.body;
+    if (e.requestFullscreen) e.requestFullscreen();
+    else if (e.webkitRequestFullscreen) e.webkitRequestFullscreen();
+    else if (e.mozRequestFullscreen) e.mozRequestFullscreen()
   }
   fit(containerW, containerH) {
     const canvas = this.canvas;

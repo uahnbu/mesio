@@ -1,5 +1,5 @@
 // const networkInterfaces = require('os').networkInterfaces();
-// const address = networkInterfaces['Wi-Fi'].filter(network => network.family === 'IPv4')[0].address;
+const address = '' // networkInterfaces['Wi-Fi'].filter(network => network.family === 'IPv4')[0].address;
 
 const express = require('express');
 const app = express();
@@ -9,14 +9,14 @@ const { MyRoom } = require('./myengine.js');
 const { questions, walls } = require('./json.js');
 
 app.set('port', process.env.PORT || 3000);
-// app.set('hostname', address || 'localhost');
+app.set('hostname', address || 'localhost');
 app.use('/static', express.static('static'));
 app.get('/', (_req, res) => res.sendFile('index.html', { root: __dirname }));
 server.listen(
-  app.get('port') // ,
+  app.get('port'),
   // app.get('hostname'),
-  // () => console.log(`Starting on port ${app.get('hostname')}:${app.get('port')}.`)
-  );
+  () => console.log(`Starting on port ${app.get('hostname')}:${app.get('port')}.`)
+);
 
 const players = new Map;
 let room;
