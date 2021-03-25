@@ -26,7 +26,7 @@ let room;
   button.onclick = () => {
     if (isHost && !isAsking) {
       isAsking = true;
-      socket.emit('start', [window.innerWidth, window.innerHeight]);
+      socket.emit('start');
     } else if (isAsking) socket.emit('next_question');
     else if (gameOver) room.downloadLeaderboard();
     else socket.emit('join', input.value);
@@ -64,7 +64,7 @@ let room;
     answerDiva.forEach((div, i) => div.innerHTML = question.answers[i]);
   });
   
-  socket.on('positions', moved => moved.forEach(({id, x, y}) => room.players.get(id).ball.setPos(x, y)));
+  socket.on('positions', moved => moved.forEach(({id, x, y}) => room.players.get(id).ball.setState(x, y)));
 
   socket.on('question', question => {
     label.innerHTML = question.text;

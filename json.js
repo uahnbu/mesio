@@ -1,109 +1,112 @@
 const questions = [
   {
-    text: '1. To avoid problems with contracts that might infringe government regulations, most contracts include?',
+    text: '1. Any party to an agreement can start an arbitration, called "the _____".',
     answers: [
-      'A. Force majeure clause',
-      'B. Partial invalidity clause',
-      'C. Government regulations clause',
-      'D. None of the answers are correct'],
+      'A. Claimant',
+      'B. Defendent',
+      'C. Referee', 
+      'D. None of the answers are correct'
+    ],
+    answer: 1
+  }, {
+    text: '2. In which form must the Arbitral Award be?',
+    answers: [
+      'A. In text message',
+      'B. In writing',
+      'C. In speech',
+      'D. All answers are correct'
+    ],
     answer: 2
   }, {
-    text: '2. In case the company’s name is complicated, a short-form follows the first use of the name to save space and reduces the risk of a mistyping. The short-form can be:',
+    text: '3. Arbitration is an efficient form of remedy for _____ of disputes and can act as a _____ that indirectly increases the _____ of parties.',
     answers: [
-      'A. A specific name',
-      'B. A generic description',
-      'C. A and B are correct', 
-      'D. None of the answers are correct'
+      'A. incentives - settlement - mechanism',
+      'B. mechanism - incentives - settlement',
+      'C. settlement - mechanism - incentives',
+      'D. mechanism - settlement - incentives'
     ],
     answer: 3
   }, {
-    text: '3. Which law system states that all the documents that predate the contract might have some bearing on that contract?',
+    text: '4. All of the below are characteristics of arbitration except:',
     answers: [
-      'A. Civil Law',
-      'B. Islam Law',
-      'C. Common Law',
-      'D. Mixed legal systems'
+      'A. Imperativeness, Fairness',
+      'B. Expert arbitrators, Transparency',
+      'C. Celerity, Clear standard',
+      'D. Fast communication, Predictability'
+    ],
+    answer: 3
+  }, {
+    text: '5. Which is one of the basic types of arbitration?',
+    answers: [
+      'A. Adhoc arbitration',
+      'B. Privacy arbitration',
+      'C. Both A and B are not incorrect',
+      'D. This answer is incorrect'
     ],
     answer: 1
   }, {
-    text: '4. There are 2 types of termination: Termination for ____ and termination for ____',
+    text: '6. Which of the follow factors do two parties have to consider when including thr arbitration clause in the agreement?\nI. Confidentiality of the subject matter\nII. Different party nationalities\nIII. Urgency of the matter\nIV. Nature of the contract',
     answers: [
-      'A. fault; inconvenience',
-      'B. fault; convenience',
-      'C. default; inconvenience',
-      'D. default; convenience'
+      'A. I and II',
+      'B. II and III',
+      'C. I and IV',
+      'D. All answers are correct'
     ],
     answer: 4
   }, {
-    text: '5. Within most Anglo-American jurisdictions, a contract must be:',
+    text: '7. A(n) _____ is a judical order that a judgement be enforced.',
     answers: [
-      'A. one-sided',
-      'B. two-sided',
-      'C. three-sided',
-      'D. four-sided'
-    ],
-    answer: 2
-  }, {
-    text: '6. The purpose of the "Entire Agreement" clause is?',
-    answers: [
-      'A. Favoritism',
-      'B. Clarify',
-      'C. Assumption',
-      'D. Essentiality'
-    ],
-    answer: 2
-  }, {
-    text: '7. Is this statement correct? - “A "notice" is any formal notification required by the contract, for example, notification that a government approval has arrived; notification that one party wants to terminate the contract, or that a defect needs correction”',
-    answers: [
-      'A. Correct',
-      'B. Incorrect',
-      'C. True',
-      'D. False'
+      'A. Writ of execution',
+      'B. Arbitral tribunal',
+      'C. Submission agreement',
+      'D. Case law'
     ],
     answer: 1
   }, {
-    text: '8. In a dispute, if the parties cannot agree on a contract language, the judge shall ____',
+    text: '8. What is the disadvantage of litigation over arbitration for both parties?',
     answers: [
-      'A. Use the judge default language version',
-      'B. Use the Buyer language version',
-      'C. Use English-language version',
-      'D. Decide which one of the versions mentioned in the contract to trust'],
-    answer: 4
-  }, {
-    text: '9. What is the role of a conciliator in a dispute settlement?',
-    answers: [
-      'A. Suggest a solution',
-      'B. Observation',
-      'C. Decide the final and enforcable judgement',
-      'D. Trusted by a Party to defend for him'],
-    answer: 1
-  }, {
-    text: '10. The Civil Law is also known as:',
-    answers: [
-      'A. Case Law',
-      'B. Common Law',
-      'C. People Law',
-      'D. Roman Law'
+      'A. Litigation is not inconfidential',
+      'B. The arbitration process is public while the litigation is not',
+      'C. In the litigation, both parties can appeal if they do not aggre with the decision',
+      'D. This answer is correct'
     ],
     answer: 4
   }, {
-    text: '11. What is the advantage of litigation over arbitration?',
+    text: '9. How many factors stated both parties has to consider when selecting an arbitrator?',
     answers: [
-      'A. Speciality',
-      'B. Finality',
-      'C. Confidentality',
-      'D. Streamlinity'
+      'A. 3',
+      'B. 4',
+      'C. 1',
+      'D. 2'
     ],
     answer: 2
   }, {
-    text: '12. The Australian Law follows the ____ family.',
+    text: '10. Which is not an expertise of an arbitrator?',
     answers: [
-      'A. Continental Law',
-      'B. Anglo-American Law',
-      'C. Civil Law',
-      'D. Roman Law'
+      'A. Legal',
+      'B. People management',
+      'C. Communicative proficiency demonstration',
+      'D. None of the answers are correct'
+    ],
+    answer: 4
+  }, {
+    text: '11. To which kind of expense do filling fees and hearing fees belong?',
+    answers: [
+      'A. Arbitrator compensation',
+      'B. Arbitrator expenses',
+      'C. Administrative fees',
+      'D. Other costs'
     ],
     answer: 2
+  }, {
+    text: '12. If certain information from a witness is presented by documents, then there is no opportunity to cross-examine the _____ of that witness.',
+    answers: [
+      'A. Faith',
+      'B. Reality',
+      'C. Testimony',
+      'D. Fairness'
+    ],
+    answer: 3
   }
 ];
 

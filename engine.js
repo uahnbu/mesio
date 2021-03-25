@@ -45,38 +45,37 @@ class Ball {
   checkCollide(roomW, roomH, objects) {
     const { x: mx, y: my, r, m} = this;
     Object.values(objects).forEach(clan => clan.forEach(obj => {
-      if (obj !== this) {
-        if (obj.type === 'ball') {
-          const { x: ox, y: oy, r: or } = obj;
-          (mx - ox) ** 2 + (my - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 0, 0, roomW, roomH);
-          (mx + roomW - ox) ** 2 + (my - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 1, 0, roomW, roomH);
-          (mx - ox) ** 2 + (my + roomH - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 0, 1, roomW, roomH);
-          (mx + roomW - ox) ** 2 + (my + roomH - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 1, 1, roomW, roomH);
-        }
-        if (obj.type === 'wall') {
-          const { x1, y1, x2, y2, r: or } = obj;
-          const line1X = x2 - x1;
-          const line1Y = y2 - y1;
-          const edge = line1X ** 2 + line1Y ** 2;
-          let min = Infinity;
-          let minX = 0, minY = 0;
-          let moveX = 0, moveY = 0;
-          [mx - roomW, mx, mx + roomW].forEach((x, i) => [my - roomH, my, my + roomH].forEach((y, j) => {
-            const line2X = x - x1;
-            const line2Y = y - y1;
-            const t = Math.max(0, Math.min(edge, line1X * line2X + line1Y * line2Y)) / edge;
-            const closestX = x1 + t * line1X;
-            const closestY = y1 + t * line1Y;
-            (x - closestX) ** 2 + (y - closestY) ** 2 <= (r + or) ** 2 && (
-              min = (x - closestX) ** 2 + (y - closestY) ** 2,
-              minX = closestX, minY = closestY,
-              moveX = i - 1, moveY = j - 1
-            );
-          }));
-          if (min <= (r + or) ** 2) {
-            const fake = new Ball(minX, minY, or, m, 'static');
-            this.collideBall(fake, moveX, moveY, roomW, roomH);
-          }
+      if (obj === this) return;
+      if (obj.type === 'ball') {
+        const { x: ox, y: oy, r: or } = obj;
+        (mx - ox) ** 2 + (my - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 0, 0, roomW, roomH);
+        (mx + roomW - ox) ** 2 + (my - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 1, 0, roomW, roomH);
+        (mx - ox) ** 2 + (my + roomH - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 0, 1, roomW, roomH);
+        (mx + roomW - ox) ** 2 + (my + roomH - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 1, 1, roomW, roomH);
+      }
+      if (obj.type === 'wall') {
+        const { x1, y1, x2, y2, r: or } = obj;
+        const line1X = x2 - x1;
+        const line1Y = y2 - y1;
+        const edge = line1X ** 2 + line1Y ** 2;
+        let min = Infinity;
+        let minX = 0, minY = 0;
+        let moveX = 0, moveY = 0;
+        [mx - roomW, mx, mx + roomW].forEach((x, i) => [my - roomH, my, my + roomH].forEach((y, j) => {
+          const line2X = x - x1;
+          const line2Y = y - y1;
+          const t = Math.max(0, Math.min(edge, line1X * line2X + line1Y * line2Y)) / edge;
+          const closestX = x1 + t * line1X;
+          const closestY = y1 + t * line1Y;
+          (x - closestX) ** 2 + (y - closestY) ** 2 <= (r + or) ** 2 && (
+            min = (x - closestX) ** 2 + (y - closestY) ** 2,
+            minX = closestX, minY = closestY,
+            moveX = i - 1, moveY = j - 1
+          );
+        }));
+        if (min <= (r + or) ** 2) {
+          const fake = new Ball(minX, minY, or, m, 'static');
+          this.collideBall(fake, moveX, moveY, roomW, roomH);
         }
       }
     }));

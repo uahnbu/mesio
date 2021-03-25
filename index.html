@@ -53,6 +53,9 @@ html, body {
   font-family: 'Arial Black';
   font-size: 1.5em;
 }
+#init.host label {
+  font-size: 2em;
+}
 #init.question label {
   background: #f7ea5466;
   border-radius: 12px;
@@ -74,11 +77,10 @@ html, body {
   color: #3a94ab;
   font-size: 1.5em;
 }
-#init.host input, #init.question button {
-  border-radius: 12px;
+#init.host input {
+  font-size: 2em;
   text-align: center;
 }
-
 
 #init button {
   background: #f7ea54aa;
@@ -90,6 +92,9 @@ html, body {
   font-family: 'Arial Black';
   font-size: 1.5em;
   cursor: pointer;
+}
+#init.host button {
+  font-size: 2em;
 }
 #init.question button {
   margin-left: auto;
@@ -111,8 +116,11 @@ html, body {
   display: block;
   font-family: Arial;
 }
-#init.host #answer-container div {
+#init #answer-container div {
   font-size: 1.5em;
+}
+#init.host #answer-container div {
+  font-size: 2em;
 }
 #init.question #answer-container {
   margin-left: auto;
@@ -145,6 +153,9 @@ html, body {
   transition: opacity 1s;
   z-index: 1;
   pointer-events: none;
+}
+#talk img {
+  transform: scale(3);
 }
 #talk.congrats #congrats, #talk.tried #tried {
   display: block;

@@ -8,7 +8,7 @@ const io = require('socket.io')(server);
 const { MyRoom } = require('./myengine.js');
 const { questions, walls } = require('./json.js');
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 2020);
 app.set('hostname', address || 'localhost');
 app.use('/static', express.static('static'));
 app.get('/', (_req, res) => res.sendFile('index.html', { root: __dirname }));
@@ -41,8 +41,9 @@ io.on('connect', socket => {
     }
   });
   
-  socket.on('start', ([width, height]) => {
+  socket.on('start', () => {
     if (id !== host) return;
+    const width = 1600, height = 900;
     room = new MyRoom(width, height, players, walls, (...data) => io.emit(...data), questions);
     io.emit('room', {
       width, height, walls,
@@ -51,10 +52,16 @@ io.on('connect', socket => {
     });
   });
   
-  socket.on('movement', angle => {
+  socket.on('movement', ({ angle, time }) => {
     if (!room) return;
     const ball = players.get(id).ball;
-    if (angle) { ball.setAngle(angle); ball.setMoving(true) }
+    if (angle) {
+      ball.setAngle(angle);
+      if (!ball.moving) {
+        repeat(() => ball.step(room.width, room.height, room.objects), (Date.now() - time) / 20 | 0);
+      }
+      ball.setMoving(true);
+    }
     else ball.setMoving(false);
   });
 
@@ -71,3 +78,7 @@ io.on('connect', socket => {
     }
   });
 });
+
+function repeat(func, times) {
+  for (let i = 0; i < times; i++) { func() }
+}

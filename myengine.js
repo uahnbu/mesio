@@ -18,9 +18,9 @@ class MyRoom extends Room {
     const len = Math.ceil(players.length ** 0.5 / 2);
     const box = Math.ceil(players.length / 4);
     for (let i = 0; i < players.length; i++) {
-      const x = (1/2 + (i / box | 0) % 2) * width / 2 + (i % box % len - len / 2) * 16 * 2;
-      const y = (1/2 + (i / box / 2 | 0)) * height / 2 + ((i % box / len | 0) - len / 2) * 16 * 2;
-      const ball = new MyBall(x, y, 16, 1, 'dynamic');
+      const x = (1/2 + (i / box | 0) % 2) * width / 2 + (i % box % len - len / 2) * 24 * 2;
+      const y = (1/2 + (i / box / 2 | 0)) * height / 2 + ((i % box / len | 0) - len / 2) * 24 * 2;
+      const ball = new MyBall(x, y, 24, 1, 'dynamic');
       objects['ball'].push(ball);
       players[i].x = x;
       players[i].y = y;
@@ -30,7 +30,7 @@ class MyRoom extends Room {
     objects['wall'] = [];
     walls.forEach(([x1, y1, x2, y2]) => {
       x1 *= width; y1 *= height; x2 *= width; y2 *= height;
-      const wall = new Wall(x1, y1, x2, y2, 8);
+      const wall = new Wall(x1, y1, x2, y2, 16);
       objects['wall'].push(wall);
     });
     this.goal = new Goal(Math.min(width, height) / 3, width, height);
@@ -40,10 +40,16 @@ class MyRoom extends Room {
     const { width, height, objects } = this;
     Object.values(objects).forEach(clan => clan.forEach(obj => obj.step && obj.step(width, height, objects)));
     const moved = [...this.players.values()].map(player => {
-      if (player.x !== player.ball.x || player.y !== player.ball.y) {
-        player.x = player.ball.x;
-        player.y = player.ball.y;
-        return { id: player.id, x: player.x, y: player.y };
+      if (
+        Math.abs(player.x - player.ball.x) > 1 ||
+        Math.abs(player.y - player.ball.y) > 1 ||
+        Math.abs(player.vX - player.ball.vX) > 0.01 ||
+        Math.abs(player.vY - player.ball.vY) > 0.01
+      ) {
+        const { x, y, vX, vY, ang } = player.ball;
+        player.x = x;
+        player.y = y;
+        return { id: player.id, x, y, vX, vY, ang };
       }
       return null;
     }).filter(hold => hold !== null);
@@ -58,7 +64,7 @@ class MyRoom extends Room {
     if (++this.myquestion < this.questions.length) {
       this.emit('question', this.questions[this.myquestion]);
       this.movable = true;
-      this.startTime(10, this.showAnswer);
+      this.startTime(20, this.showAnswer);
     } else this.emit('ended');
   }
   showAnswer() {
