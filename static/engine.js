@@ -246,7 +246,7 @@ class Goal {
       [totalW / 4 - size2  , totalH * 3/4 - size2],
       [totalW * 3/4 - size2, totalH * 3/4 - size2]
     ];
-    this.colors = ['#ec407a', '#66bb6a', '#ffa726', '#7e57c2'];
+    this.colors = ['#ec407a', '#66bb6a', '#e67e22', '#7e57c2'];
   }
   draw(_roomW, _roomH, room) {
     const { size, colors } = this;
